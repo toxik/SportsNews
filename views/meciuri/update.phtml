@@ -1,0 +1,85 @@
+<h1>Adaugare / Modificare meci</h1>
+<h2>Aici puteti modifica si adauga meciuri</h2>
+<form method="post" class="edit">
+	<?php if ($page['errors']): ?>
+	<ul class="errors">
+		<?php foreach($page['errors'] as $err): ?>
+		<li><?php echo $err; ?></li>
+		<?php endforeach; ?>
+	</ul>
+	<?php endif; ?>
+	<fieldset>
+		<legend>Completați următoarele date:</legend>
+		<label>
+			Sportul: 
+			<select name="sport_id" id="sport_id">
+				<?php if ($page['sports'])
+					foreach($page['sports'] as $id => $sport): ?>
+				<option value="<?php echo $id; ?>" <?php 
+					if ($id == $_POST['sport_id']) echo 'selected';?>><?php echo $sport; ?></option>
+				<?php endforeach; ?>
+			</select>
+		</label>
+		
+		<label>
+			Echipa 1:
+			<select name="echipa_id1" id="echipa_id1">
+				<?php if ($page['teams'])
+					foreach($page['teams'] as $r): ?>
+				<option value="<?php echo $r['echipa_id']; ?>" <?php if ($r['echipa_id'] == $_POST['echipa_id1']) 
+					echo 'selected';?>><?php echo $r['echipa_nume']; ?></option>
+				<?php endforeach; ?>
+			</select>
+		</label>
+		
+		<label>
+			Echipa 1:
+			<select name="echipa_id2" id="echipa_id2">
+				<?php if ($page['teams'])
+					foreach($page['teams'] as $r): ?>
+				<option value="<?php echo $r['echipa_id']; ?>" <?php if ($r['echipa_id'] == $_POST['echipa_id2']) 
+					echo 'selected';?>><?php echo $r['echipa_nume']; ?></option>
+				<?php endforeach; ?>
+			</select>
+		</label>
+		
+		
+		<label>Data ( ziua.luna.anul ): <span style="display: inline-block; width: 50px">&nbsp;</span>ora:minutul <br /></label>
+			<input class="dateControl" name="meci_data" value="<?php echo formatData($_POST['meci_data']); ?>" >
+			<input size="2" name="meci_ora_minutul" value="<?php echo $_POST['meci_ora_minutul']; ?>" >
+		<br />
+		<label>
+			Durata:
+			<input name="meci_durata" size="2" style="text-align: right" value="<?php echo $_POST['meci_durata']; ?>" />&quot;
+		</label>
+		<input type="submit" value="Trimite">
+	</fieldset>
+</form>
+
+<script>
+	$(function(){
+		var $sport = $('#sport_id'), $team1 = $('#echipa_id1'), $team2 = $('#echipa_id2');
+		
+		$sport.change( refreshTeams );
+		$team1.focus( refreshConstraint );
+		$team2.focus( refreshConstraint );
+		
+		function refreshTeams() {
+			$.get('/meciuri/getRawTeams/sport_id/' + $sport.val(), function (data){ 
+				$team1.html( data );
+				$team2.html( data );
+			});
+		}
+		
+		function refreshConstraint() {
+			var restrict1 = $team1.find('option:selected').val(),
+				restrict2 = $team2.find('option:selected').val();
+			
+			$team1.find('option').removeAttr('disabled');
+			$team2.find('option').removeAttr('disabled');
+			
+			$team1.find('option[value='+restrict2+']').attr('disabled','disabled');
+			$team2.find('option[value='+restrict1+']').attr('disabled','disabled');
+		}
+	});
+</script>

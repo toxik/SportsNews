@@ -1,0 +1,35 @@
+<h1>Echipe</h1>
+<h2>Inserare / Modificare echipă</h2>
+<form method="post" class="edit">
+	<?php if ($page['errors']): ?>
+	<ul class="errors">
+		<?php foreach($page['errors'] as $err): ?>
+		<li><?php echo $err; ?></li>
+		<?php endforeach; ?>
+	</ul>
+	<?php endif; ?>
+	<fieldset>
+		<legend>Completați următoarele date:</legend>
+		<label>
+			Sportul practicat<br />
+			<select name="sport_id">
+			<?php if ($page['sports'])
+				  foreach($page['sports'] as $id => $nume): ?>
+				<option <?php if ($_POST['sport_id'] == $id ) echo 'selected'; ?> value="<?php 
+					echo $id; ?>"><?php echo $nume; ?></option>
+			<?php endforeach; ?>
+			</select>	
+		</label>
+		<label>
+			Numele echipei<br />
+			<input name="echipa_nume" value="<?php echo $_POST['echipa_nume'];?>" >
+		</label>
+		
+		<label>
+			Numele antrenorului<br />
+			<input name="echipa_nume_antrenor" value="<?php echo $_POST['echipa_nume_antrenor'];?>" >
+		</label>
+		
+		<input type="submit" value="Trimite" >
+	</fieldset>
+</form>

@@ -1,0 +1,32 @@
+<h1>Sporturi</h1>
+<h2>Lista tuturor sporturilor regasite pe acest site</h2>
+<?php echo $page['paginare']; ?>
+<?php if($page['permissions']['update']): ?>
+<button class="add link right" href="/sporturi/update">Adaugă</button>
+<?php endif; ?>
+<table class="zebra">
+	<thead><tr>
+		<th>Sportul</th><th colspan="2">Descriere</th>
+	</thead>
+	<tbody>
+	<?php foreach($page['sports'] as $i => $r): ?>
+		<tr <?php if ($i%2) echo 'class="odd"'; ?>>
+			<td><?php echo $r['sport_nume']; ?></td>
+			<td><?php echo $r['sport_descriere']; ?></td>
+			<td style="text-align:center; width: <?php echo ($page['permissions']['update']) ? 214 : 67 ?>px">
+				<button class="list link" href="/echipe/index/sport_id/<?php 
+						echo $r['sport_id']; ?>">Echipe</button>
+				<?php if($page['permissions']['update']): ?>
+				<button class="edit link" href="/sporturi/update/id/<?php 
+						echo $r['sport_id']; ?>">Modifică</button>
+				<?php endif; ?>
+				<?php if($page['permissions']['delete']): ?>
+				<button class="delete link" href="/sporturi/delete/id/<?php 
+						echo $r['sport_id']; ?>">Șterge</button>
+				<?php endif; ?>
+			</td>
+		</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>
+<?php echo $page['paginare'];

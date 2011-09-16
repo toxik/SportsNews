@@ -1,0 +1,27 @@
+<?php 
+ob_start();
+if ($this->paginare->pageCount>1): ?>
+<style type="text/css">
+	.ui-state-selected { border: 1px solid #fbcb09; background-color:#fdf5ce; font-weight: bold; color: #c77405; }
+</style>
+<form action="/<?php echo MODULE; ?>/<?php echo ACTION; ?>">
+<fieldset class="paginatie">
+<legend>Rezultate: <?=$this->paginare->totalItemCount?> | Pagini: <?=$this->paginare->pageCount?></legend>
+	<input type="hidden" name="p" value="1" id="paginatie-control" />
+	<?php foreach($_GET as $id => $val): 
+		if ($id != 'p'): ?>
+		<input type="hidden" name="<?php echo $id; ?>" value="<?php echo $val; ?>" >
+	<?php endif; endforeach; ?>
+	<div id="butoane-paginatie">
+		<div class="grup grup2">
+		<?php foreach ($this->paginare->pagesInRange as $pagNr): ?>
+			<input type="submit" name="p" value="<?php echo $pagNr; ?>" 
+				<?php echo ($this->paginare->current!=$pagNr?'':' class="ui-state-selected"')?> /> 
+		<?php endforeach; ?>
+		</div>
+	</div>
+</fieldset>
+</form>
+<?php elseif (!$this->paginare->totalItemCount): ?>
+<p class="error"> Nu există înregistrări! </p>
+<?php endif;  

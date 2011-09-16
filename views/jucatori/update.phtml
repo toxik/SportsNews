@@ -1,0 +1,32 @@
+<h1>Jucători</h1>
+<h2>Inserare / Modificare jucător</h2>
+<form method="post" class="edit">
+	<?php if ($page['errors']): ?>
+	<ul class="errors">
+		<?php foreach($page['errors'] as $err): ?>
+		<li><?php echo $err; ?></li>
+		<?php endforeach; ?>
+	</ul>
+	<?php endif; ?>
+	<input type="hidden" name="echipa_id" value="<?php echo $_POST['echipa_id']; ?>" />
+	<fieldset>
+		<legend>Completați următoarele date:</legend>
+		<label>
+			Numele jucătorului<br />
+			<input name="jucator_nume" value="<?php echo $_POST['jucator_nume'];?>" />
+		</label>
+		
+		<label>
+			Postul jucătorului<br />
+			<input name="jucator_post" value="<?php echo $_POST['jucator_post'];?>" />
+		</label>
+		
+		<label>
+			Data nașterii<br />
+			<input name="jucator_data_nasterii" class="dateControl" value="<?php 
+				echo formatData($_POST['jucator_data_nasterii']); ?>" />
+		</label>
+		
+		<input type="submit" value="Trimite" >
+	</fieldset>
+</form>

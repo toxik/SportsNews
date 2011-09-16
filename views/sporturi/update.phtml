@@ -1,0 +1,24 @@
+<h1>Sporturi</h1>
+<h2>Inserare / Modificare sport</h2>
+<form method="post" class="edit">
+	<?php if ($page['errors']): ?>
+	<ul class="errors">
+		<?php foreach($page['errors'] as $err): ?>
+		<li><?php echo $err; ?></li>
+		<?php endforeach; ?>
+	</ul>
+	<?php endif; ?>
+	<fieldset>
+		<legend>Completați următoarele date:</legend>
+		<label>
+			Numele sportului<br />
+			<input name="sport_nume" value="<?php echo $_POST['sport_nume'];?>" >
+		</label>
+		
+		<label>
+			Descrierea sportului<br />
+			<textarea cols="40" rows="8" name="sport_descriere"><?php echo $_POST['sport_descriere']; ?></textarea>
+		</label>
+		<input type="submit" value="Trimite" >
+	</fieldset>
+</form>

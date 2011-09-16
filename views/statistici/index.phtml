@@ -1,0 +1,159 @@
+<!--[if IE]><script language="javascript" type="text/javascript" src="/template/js/flot/excanvas.min.js"></script><![endif]-->
+<script src="/template/js/flot/jquery.flot.min.js"></script>
+<style>
+	.ui-widget { font-size: 1em }
+</style>
+<h1>Statistici site</h1>
+<p class="more">&nbsp;</p>
+<br /><br />
+<div style="float: right">
+	<form action="/statistici/index">
+		<fieldset>
+			<legend>Selectare perioadă</legend>
+			<input type="text" class="datesControl" readonly name="start" value="<?php echo $_GET['start']; ?>" /> -
+			<input type="text" class="datesControl" readonly name="end" placeholder="acum" value="<?php echo $_GET['end']; ?>" />
+			<input type="submit" value="Aplică"/>
+		</fieldset>
+	</form>
+</div>
+
+<br style="clear: both" /><br />
+<h2>Accesări site</h2>
+<div id="statisticaAccesari" style="width:100%; height: 400px"></div>
+
+<br /><br />
+<h2>Vizitatori unici</h2>
+<div id="statisticaUnici" style="width:100%; height: 400px"></div>
+
+<br /><br />
+<h2>Cele mai vizitate pagini</h2>
+<table class="zebra">
+	<thead>
+		<tr>
+			<th>URL</th><th width="120" style="text-align:center">Accesări</th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php foreach( $page['top10Pages'] as $i => $r ): ?>
+	<tr <?php if($i%2) echo 'class="odd"'; ?>>
+		<td><?php echo $r['URL']; ?></td>
+		<td align="center"><?php echo $r['total']; ?></td>
+	</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>
+
+
+<br /><br />
+<h2>Cele mai folosite browsere</h2>
+<table class="zebra">
+	<thead>
+		<tr>
+			<th>Browser</th><th width="120" style="text-align:center">Accesări</th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php foreach( $page['top10Browsers'] as $i => $r ): ?>
+	<tr <?php if($i%2) echo 'class="odd"'; ?>>
+		<td><?php echo $r['BROWSER']; ?></td>
+		<td align="center"><?php echo $r['total']; ?></td>
+	</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>
+
+
+<br /><br />
+<h2>Cei mai buni refereri <em style="font-size: .8em; color: gray">inclusiv locali</em></h2>
+<table class="zebra">
+	<thead>
+		<tr>
+			<th>Referer</th><th width="120" style="text-align:center">Accesări</th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php foreach( $page['top10Referrers'] as $i => $r ): ?>
+	<tr <?php if($i%2) echo 'class="odd"'; ?>>
+		<td><?php echo $r['REFERER']; ?></td>
+		<td align="center"><?php echo $r['total']; ?></td>
+	</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>
+
+<br />
+
+<a href="/statistici/raport/start/<?php echo $_GET['start']; ?>/end/<?php 
+	echo $_GET['end']; ?>/">Descărcare date neprelucrate în format EXCEL</a>
+
+<br /><br />
+
+<script>
+$(function() {
+	var accesari1 = [ <?php foreach($page['accesari'] as $ts => $val) echo "[ ".$ts."000, $val ],"; ?> ],
+		accesari2 = [ <?php foreach($page['accesariLoggedIn'] as $ts => $val) echo "[ ".$ts."000, $val ],"; ?> ],
+		unici1	  = [ <?php foreach($page['unici'] as $ts => $val) echo "[ ".$ts."000, $val ],"; ?> ],
+		unici2	  = [ <?php foreach($page['uniciLoggedIn'] as $ts => $val) echo "[ ".$ts."000, $val ],"; ?> ],
+	p1	= $.plot( 
+			$('#statisticaAccesari'), 
+			[ 
+				{ 	data: accesari1, label:'Accesări', color:'#3aaad8', points: { show: true }, lines: { show: true } },
+				{   data: accesari2, label:'Accesări Logați', color:'blue', points: { show: true }, lines: { show: true } }
+			], { xaxes: [ { mode: 'time' } ], yaxes: [ { min: 0 } ], grid: { hoverable: true, clickable: true } }
+        ),
+	p2	= $.plot( 
+			$('#statisticaUnici'), 
+			[ 
+				{   data: unici1, label:'Unici', color:'#d83a41', points: { show: true }, lines: { show: true } },
+				{   data: unici2, label:'Unici Logați', color:'yellow', points: { show: true }, lines: { show: true } }
+			], { xaxes: [ { mode: 'time' } ], yaxes: [ { min: 0 } ], grid: { hoverable: true, clickable: true } }
+        );
+	
+	//tooltips
+	var previousPoint = null, date = new Date();
+    $('#statisticaAccesari, #statisticaUnici').bind('plothover', function (event, pos, item) {
+		if (item) {
+			if (previousPoint != item.dataIndex) {
+				previousPoint = item.dataIndex;
+				
+				$('#tooltip').remove();
+				var x = new Date(item.datapoint[0]).toLocaleDateString(),
+					y = item.datapoint[1];
+				//x = x.getDate() + '.' + (x.getMonth() + 1) + '.' + x.getFullYear();
+				showTooltip(item.pageX, item.pageY,
+							item.series.label + ' din ' + x + ': <b>' + parseInt(y) + '</b>');
+			}
+		} else {
+			$('#tooltip').remove();
+			previousPoint = null;            
+		}
+    });
+	
+	function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            border: '1px solid #fdd',
+            padding: '2px',
+            'background-color': '#fee',
+            opacity: 0.90
+        }).appendTo('body').fadeIn(200);
+    }
+	
+	var dates = $('.datesControl').datepicker({
+		autosize: true,
+		onSelect: function( selectedDate ) {
+				var option = this.name == 'start' ? 'minDate' : 'maxDate',
+					instance = $( this ).data( 'datepicker' ),
+					date = $.datepicker.parseDate(
+						instance.settings.dateFormat ||
+						$.datepicker._defaults.dateFormat,
+						selectedDate, instance.settings );
+				dates.not( this ).datepicker( 'option', option, date );
+			}
+	});
+	
+});
+</script>

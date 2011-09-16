@@ -1,0 +1,49 @@
+<h1>Utilizatori</h1>
+<h2>Administrare utilizatori</h2>
+<?php echo $page['paginare']; $tipuri = array( 'A' => 'Administrator', 'M' => 'Manager', 'U' => 'User' ); ?>
+<table class="zebra">
+	<thead><tr>
+		<th>Email</th><th>Tipul contului</th><th>Acțiuni</th>
+	</thead>
+	<tbody>
+	<?php 	
+		if ($page['users'])
+		foreach($page['users'] as $i => $r): ?>
+		<tr <?php if ($i%2) echo 'class="odd"'; ?>>
+			<td><?php echo $r['email']; ?></td>
+			<td><?php echo $tipuri[$r['type']]; ?></td>
+			<td width="224">
+			<?php if($_SESSION['Zend_Auth']['storage']->id != $r['id']): ?>
+				<?php if($r['status']): ?>
+					<button class="link" href="/utilizatori/changeStatus/s/0/id/<?php echo $r['id']; 
+							?>">Dezactivare</button>
+				<?php else: ?>
+					<button class="link" href="/utilizatori/changeStatus/s/1/id/<?php echo $r['id']; 
+							?>">Activare</button>
+				<?php endif; ?>
+				
+				<?php if($r['status']): ?>
+					<?php if ($r['type'] == 'U'): ?>
+						<button class="link" href="/utilizatori/changeType/t/M/id/<?php echo $r['id']; ?>">
+							&raquo; Manager</button>
+						<button class="link" href="/utilizatori/changeType/t/A/id/<?php echo $r['id']; ?>">
+							&raquo; Admin</button>
+					<?php elseif($r['type'] == 'M'): ?>
+						<button class="link" href="/utilizatori/changeType/t/A/id/<?php echo $r['id']; ?>">
+							&raquo; Admin</button>
+						<button class="link" href="/utilizatori/changeType/t/U/id/<?php echo $r['id']; ?>">
+							&raquo; User</button>
+					<?php elseif($r['type'] == 'A'): ?>
+						<button class="link" href="/utilizatori/changeType/t/M/id/<?php echo $r['id']; ?>">
+							&raquo; Manager</button>
+						<button class="link" href="/utilizatori/changeType/t/U/id/<?php echo $r['id']; ?>">
+							&raquo; User</button>
+					<?php endif; ?>
+				<?php endif; ?>
+			<?php endif; ?>
+			</td>
+		</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>
+<?php echo $page['paginare'];

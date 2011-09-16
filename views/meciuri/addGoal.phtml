@@ -1,0 +1,36 @@
+<h1>Meciuri</h1>
+<h2>Adăugare gol</h2>
+
+<form method="post">
+	<fieldset>
+		<legend>Alegeți din opțiunile de mai jos:</legend>
+		Gol pentru: <br />
+		
+		<input name="primaEchipa" id="e1" type="radio" checked="checked" value="1" />
+				<label for="e1"><?php echo $page['data']['info']['echipa_nume1']; ?></label> <br />
+		<input name="primaEchipa" id="e2" type="radio" value="0" />
+				<label for="e2"><?php echo $page['data']['info']['echipa_nume2']; ?></label>
+		
+		<br />
+		<label>Marcator: <br />
+			<select name="jucator_id">
+				<optgroup label="<?php echo $page['data']['info']['echipa_nume1']; ?>">
+					<?php foreach($page['data']['echipa1'] as $r): ?>
+					<option value="<?php echo $r['jucator_id']; ?>"><?php echo $r['jucator_nume']; ?></option>
+					<?php endforeach; ?>
+				</optgroup>
+				<optgroup label="<?php echo $page['data']['info']['echipa_nume2']; ?>">
+					<?php foreach($page['data']['echipa2'] as $r): ?>
+					<option value="<?php echo $r['jucator_id']; ?>"><?php echo $r['jucator_nume']; ?></option>
+					<?php endforeach; ?>
+				</optgroup>
+			</select>
+		</label>
+		<br />
+		<label>Minutul: <br />
+			<input name="minutul" value='20' style="text-align: right" />"
+		</label>
+		<br />
+		<input type="submit" value="Adăugare gol" >
+	</fieldset>
+</form>

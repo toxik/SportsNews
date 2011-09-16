@@ -1,0 +1,39 @@
+<h1>Meciuri</h1>
+<h2>Lista tuturor meciurilor</h2>
+<?php echo $page['paginare']; ?>
+<?php if($page['permissions']['update']): ?>
+<button class="add link right" href="/meciuri/update">Adaugă</button>
+<?php endif; ?>
+<table class="zebra">
+	<thead><tr>
+		<th>Sportul</th><th>Data</th><th>Echipa gazdă</th><th>Scorul</th><th>Echipa invitată</th><th>Durata</th><th>Detalii</th>
+	</thead>
+	<tbody>
+	<?php 	
+		if ($page['matches'])
+		foreach($page['matches'] as $i => $r): ?>
+		<tr <?php if ($i%2) echo 'class="odd"'; ?>>
+			<td style="font-weight:bold"><?php echo $r['sport_nume']; ?></td>
+			<td><?php echo $r['meci_data_ora']; ?></td>
+			<td><?php echo $r['echipa1_nume']; ?> </td>
+			<td style="font-size: 1.05em; text-align: center; font-weight:bold">
+				<?php echo $r['puncte1']; ?> - <?php echo $r['puncte2']; ?></td>
+			<td><?php echo $r['echipa2_nume']; ?></td>
+			<td><?php echo $r['meci_durata'] ?>&quot;</td>
+			<td style="text-align:center; width: 64px">
+				<button class="list link" href="/meciuri/detalii/meci_id/<?php 
+						echo $r['meci_id']; ?>">Goluri</button>
+				<?php if($page['permissions']['update']): ?>
+				<button class="edit link" href="/meciuri/update/id/<?php 
+						echo $r['meci_id']; ?>">Modifică</button>
+				<?php endif; ?>
+				<?php if($page['permissions']['delete']): ?>
+				<button class="delete link" href="/meciuri/delete/id/<?php 
+						echo $r['meci_id']; ?>">Șterge</button>
+				<?php endif; ?>
+			</td>
+		</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>
+<?php echo $page['paginare'];

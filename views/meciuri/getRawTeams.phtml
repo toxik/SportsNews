@@ -1,0 +1,4 @@
+<?php if ($page['teams'])
+	foreach($page['teams'] as $r): ?>
+	<option value="<?php echo $r['echipa_id']; ?>"><?php echo $r['echipa_nume']; ?></option>
+<?php endforeach;

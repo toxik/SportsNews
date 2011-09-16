@@ -1,0 +1,32 @@
+<h1>Detalii meci</h1>
+<h2><?php echo $page['details']['matchInfo']['sport_nume'] . ' ' . 
+			$page['details']['matchInfo']['meci_data_ora']; ?></h2>
+
+<?php if($page['permissions']['addGoal']): ?>
+<button class="add link right" href="/meciuri/addGoal/meci_id/<?php 
+	echo $page['details']['matchInfo']['meci_id'];?>">Adăugare gol</button>
+<?php endif; ?>
+
+<table class="zebra">
+	<tr class="meciHeader">
+		<th class="first"><?php echo $page['details']['matchInfo']['echipa1_nume']; ?></th>
+		<th><?php echo $page['details']['matchInfo']['puncte1'] . ' - ' . 
+						$page['details']['matchInfo']['puncte2']; ?></th>
+		<th class="last"><?php echo $page['details']['matchInfo']['echipa2_nume']; ?></th>
+	</tr>
+	<tbody>
+	<?php 	
+		if ($page['details']['goalsInfo'])
+		foreach($page['details']['goalsInfo'] as $i => $r): ?>
+		<tr <?php if ($i%2) echo 'class="odd"'; ?>>
+			<td>
+				<?php if($page['permissions']['deleteGoal']): ?>
+				<button class="link delete" href="/meciuri/deleteGoal/id/<?php echo $r['gol_id']; ?>">Șterge</button>
+				<?php endif; ?>
+				<b class="minut"><?php echo $r['minutul']; ?>&quot;</b>
+			</td>
+			<td colspan="2"><?php echo $r['jucator_nume']; ?> <span style="color: red"><?php echo $r['autogol']; ?></span></td>
+		</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>

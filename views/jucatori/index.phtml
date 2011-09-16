@@ -1,0 +1,39 @@
+<h1>Jucatori</h1>
+<h2>Lista jucatorilor</h2>
+<?php echo $page['paginare']; ?>
+<?php if($page['permissions']['update'] && $_GET['echipa_id']): ?>
+<button class="add link right" href="/jucatori/update/echipa_id/<?php echo $_GET['echipa_id']; ?>">Adaugă</button>
+<?php elseif ($page['permissions']['update']) : ?>
+<button class="add link right" href="/echipe">Adaugă</button>
+<?php endif; ?>
+<table class="zebra">
+	<thead><tr>
+		<th>Echipa</th><th>Sportul</th><th>Numele jucătorului</th><th>Vârsta</th><th>Postul</th><th>Acțiuni</th>
+	</thead>
+	<tbody>
+	<?php 	
+		if ($page['players'])
+		foreach($page['players'] as $i => $r): ?>
+		<tr <?php if ($i%2) echo 'class="odd"'; ?>>
+			<td><?php echo $r['echipa_nume']; ?></td>
+			<td><?php echo $r['sport_nume']; ?></td>
+			<td><?php echo $r['jucator_nume']; ?></td>
+			<td><?php echo $r['age']; ?> ani</td>
+			<td><?php echo $r['jucator_post']; ?></td>
+			<td style="text-align:center; width: <?php echo ($page['permissions']['update']) ? 212 : 64 ?>px">
+				<button class="list link" href="/jucatori/goluri/jucator_id/<?php 
+						echo $r['jucator_id']; ?>">Goluri</button>
+				<?php if($page['permissions']['update']): ?>
+				<button class="edit link" href="/jucatori/update/id/<?php 
+						echo $r['jucator_id']; ?>">Modifică</button>
+				<?php endif; ?>
+				<?php if($page['permissions']['delete']): ?>
+				<button class="delete link" href="/jucatori/delete/id/<?php 
+						echo $r['jucator_id']; ?>">Șterge</button>
+				<?php endif; ?>
+			</td>
+		</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>
+<?php echo $page['paginare'];
